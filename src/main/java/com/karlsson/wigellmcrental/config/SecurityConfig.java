@@ -32,18 +32,16 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/motorcycles/**") //user only get
                         .hasAnyRole("USER", "ADMIN")
-
-/*                        .requestMatchers(HttpMethod.POST, "/api/v1/bikes/**")
-                        .hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/bikes/**")
-                        .hasRole("ADMIN")*/
-
-                      /*  .requestMatchers("/api/v1/bookings/**")
-                        .hasRole("USER")*/
-
+                                .requestMatchers(HttpMethod.GET, "/api/v1/bookings/**")
+                                .hasAnyRole("USER", "ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/v1/bookings/**")
+                                .hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/v1/customers/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/bikes/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/bookings/**").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/customers/*/addresses/**")
+                                .hasRole("ADMIN").requestMatchers("/actuator/**").permitAll()
+
 
                         .anyRequest().authenticated()
                 )

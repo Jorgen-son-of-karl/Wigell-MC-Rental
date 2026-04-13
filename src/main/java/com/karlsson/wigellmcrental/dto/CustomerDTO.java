@@ -1,5 +1,6 @@
 package com.karlsson.wigellmcrental.dto;
 
+import java.util.List;
 
 public class CustomerDTO {
 
@@ -11,7 +12,6 @@ public class CustomerDTO {
     public String email;
     public String password;
     public String phoneNumber;
-    public String address;
-    public String city;
+    public List<AddressDTO> addresses;
     public String role;
 }

@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface MotorcycleRepository extends JpaRepository<Motorcycle, Long> {
 
-    List<Motorcycle> findByBrand(String brand);
 }

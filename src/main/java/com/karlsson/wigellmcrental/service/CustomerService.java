@@ -1,11 +1,13 @@
 package com.karlsson.wigellmcrental.service;
 
+import com.karlsson.wigellmcrental.dto.AddressDTO;
 import com.karlsson.wigellmcrental.dto.CustomerDTO;
 import com.karlsson.wigellmcrental.dto.MotorcycleDTO;
 import com.karlsson.wigellmcrental.entities.Booking;
 import com.karlsson.wigellmcrental.entities.Customer;
 import com.karlsson.wigellmcrental.entities.Motorcycle;
 import com.karlsson.wigellmcrental.repo.CustomerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,12 @@ public class CustomerService {
 
     private final CustomerRepository repository;
 
-    public CustomerService(CustomerRepository repository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomerService(CustomerRepository repository,
+                           PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public CustomerDTO getByUsername(String username) {
@@ -68,26 +74,21 @@ public class CustomerService {
         if (dto.lastName != null) {
             c.setLastName(dto.lastName);
         }
+
         if (dto.role != null) {
             c.setRole(dto.role);
         }
+
         if (dto.email != null) {
             c.setEmail(dto.email);
         }
 
         if (dto.password != null) {
-            c.setPassword(dto.password); //not sure how realistic it is that admin can help with passwordreset, but it will serve for now
+            c.setPassword(passwordEncoder.encode(dto.password));
         }
 
         if (dto.phoneNumber != null) {
             c.setPhoneNumber(dto.phoneNumber);
-        }
-        if (dto.address != null) {
-            c.setAddress(dto.address);
-        }
-
-        if (dto.city != null) {
-            c.setCity(dto.city);
         }
 
         return toDTO(repository.save(c));
@@ -101,11 +102,23 @@ public class CustomerService {
         dto.lastName = customer.getLastName();
         dto.role = customer.getRole();
         dto.email = customer.getEmail();
-        dto.password = customer.getPassword();
         dto.phoneNumber = customer.getPhoneNumber();
-        dto.address = customer.getAddress();
-        dto.city = customer.getCity();
+        dto.addresses = customer.getAddresses()
+                .stream()
+                .map(a -> {
+                    AddressDTO ad = new AddressDTO();
+                    ad.id = a.getId();
+                    ad.street = a.getStreet();
+                    ad.city = a.getCity();
+                    return ad;
+                })
+                .toList();
         return dto;
     }
+
+/*    public Customer findEntityByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }*/
 
 }

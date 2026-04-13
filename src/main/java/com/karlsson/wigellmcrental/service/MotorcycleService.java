@@ -56,7 +56,6 @@ public class MotorcycleService {
 
     private Motorcycle toEntity(MotorcycleDTO dto) {
         Motorcycle mc = new Motorcycle();
-        mc.setId(dto.id);
         mc.setBrand(dto.brand);
         mc.setModel(dto.model);
         mc.setMakeYear(dto.makeYear);

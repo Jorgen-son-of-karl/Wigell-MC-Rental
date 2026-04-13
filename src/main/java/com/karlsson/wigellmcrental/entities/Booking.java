@@ -1,9 +1,6 @@
 package com.karlsson.wigellmcrental.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -18,6 +15,8 @@ public class Booking {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    @Enumerated(EnumType.STRING)
+   private BookingStatus status;
 
     public Booking() {}
 
@@ -26,6 +25,12 @@ public class Booking {
         this.motorcycleId = motorcycleId;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = BookingStatus.ACTIVE;
+    }
+    public enum BookingStatus {
+        ACTIVE,
+        RETURNED,
+        LATE
     }
 
     public long getId() {
@@ -66,5 +71,12 @@ public class Booking {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public BookingStatus getStatus() {
+        return status;
+    }
+    public void setStatus(BookingStatus status) {
+        this.status = status;
     }
 }

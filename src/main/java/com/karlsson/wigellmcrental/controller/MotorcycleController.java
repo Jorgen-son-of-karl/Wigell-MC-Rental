@@ -36,14 +36,24 @@ public class MotorcycleController {
     }
 
 
-    @PostMapping
+
+    @GetMapping("/availability")
+    public List<MotorcycleDTO> getAvailable(
+            @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+
+        return service.getAvailable(from.toString(), to.toString());
+    }
+
+    //==========================ADMIN=====================================
+    @PostMapping("/bikes")
     public MotorcycleDTO create(@Valid @RequestBody MotorcycleDTO dto) {
         logger.info("Admin created motorcycle: {} {} {} {}", dto.brand, dto.model, dto.makeYear, dto.pricePerDay);
         return service.create(dto);
     }
 
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/bikes/{id}")
     public void delete(@PathVariable Long id) {
 
         MotorcycleDTO mc = service.getById(id); //fetching for attributes
@@ -58,32 +68,21 @@ public class MotorcycleController {
 
         service.delete(id);
     }
-    @GetMapping("/availability")
-    public List<MotorcycleDTO> getAvailable(
-            @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-
-        return service.getAvailable(from.toString(), to.toString());
-    }
-
-    //==========================ADMIN=====================================
 
     // get all motorcycles
-    @GetMapping("/api/v1/bikes")
+    @GetMapping("/bikes")
     public List<MotorcycleDTO> getAllAdmin() {
-        logger.info("Admin fetching all motorcycles");
         return service.getAll();
     }
 
     // get by id
-    @GetMapping("/api/v1/bikes/{id}")
+    @GetMapping("/bikes/{id}")
     public MotorcycleDTO getOne(@PathVariable Long id) {
-        logger.info("Admin fetching motorcycle id={}", id);
         return service.getById(id);
     }
 
     // put update
-    @PutMapping("/api/v1/bikes/{id}")
+    @PutMapping("/bikes/{id}")
     public MotorcycleDTO update(@PathVariable Long id,
                                 @RequestBody MotorcycleDTO dto) {
 

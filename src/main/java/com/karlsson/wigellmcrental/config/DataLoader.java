@@ -1,8 +1,10 @@
 package com.karlsson.wigellmcrental.config;
 
+import com.karlsson.wigellmcrental.entities.Address;
 import com.karlsson.wigellmcrental.entities.Booking;
 import com.karlsson.wigellmcrental.entities.Customer;
 import com.karlsson.wigellmcrental.entities.Motorcycle;
+import com.karlsson.wigellmcrental.repo.AddressRepository;
 import com.karlsson.wigellmcrental.repo.BookingRepository;
 import com.karlsson.wigellmcrental.repo.CustomerRepository;
 import com.karlsson.wigellmcrental.repo.MotorcycleRepository;
@@ -20,13 +22,10 @@ public class DataLoader {
             CustomerRepository customerRepo,
             MotorcycleRepository motorcycleRepo,
             BookingRepository bookingRepo,
+            AddressRepository addressRepo,
             PasswordEncoder encoder
     ) {
         return args -> {
-
-            bookingRepo.deleteAll();
-            motorcycleRepo.deleteAll();
-            customerRepo.deleteAll();
 
             //
             Customer admin = new Customer();
@@ -36,8 +35,6 @@ public class DataLoader {
             admin.setEmail("alex.johansson@email.com");
             admin.setPassword(encoder.encode("admin"));
             admin.setPhoneNumber("0701234567");
-            admin.setAddress("Storgatan 1");
-            admin.setCity("Stockholm");
             admin.setRole("ROLE_ADMIN");
 
             Customer user1 = new Customer();
@@ -47,8 +44,6 @@ public class DataLoader {
             user1.setEmail("maria.andersson@email.com");
             user1.setPassword(encoder.encode("password"));
             user1.setPhoneNumber("0702345678");
-            user1.setAddress("Parkvägen 12");
-            user1.setCity("Göteborg");
             user1.setRole("ROLE_USER");
 
             Customer user2 = new Customer();
@@ -58,8 +53,6 @@ public class DataLoader {
             user2.setEmail("jonas.nilsson@email.com");
             user2.setPassword(encoder.encode("password"));
             user2.setPhoneNumber("0703456789");
-            user2.setAddress("Björkgatan 5");
-            user2.setCity("Malmö");
             user2.setRole("ROLE_USER");
 
             Customer user3 = new Customer();
@@ -69,8 +62,6 @@ public class DataLoader {
             user3.setEmail("emma.karlsson@email.com");
             user3.setPassword(encoder.encode("password"));
             user3.setPhoneNumber("0704567890");
-            user3.setAddress("Solvägen 8");
-            user3.setCity("Uppsala");
             user3.setRole("ROLE_USER");
 
             Customer user4 = new Customer();
@@ -80,11 +71,35 @@ public class DataLoader {
             user4.setEmail("leo.eriksson@email.com");
             user4.setPassword(encoder.encode("password"));
             user4.setPhoneNumber("0705678901");
-            user4.setAddress("Havsgatan 3");
-            user4.setCity("Helsingborg");
             user4.setRole("ROLE_USER");
 
             customerRepo.saveAll(List.of(admin, user1, user2, user3, user4));
+
+            Address a1 = new Address();
+            a1.setStreet("Storgatan 1");
+            a1.setCity("Stockholm");
+            a1.setCustomer(admin);
+
+            Address a2 = new Address();
+            a2.setStreet("Parkvägen 12");
+            a2.setCity("Göteborg");
+            a2.setCustomer(user1);
+
+            Address a3 = new Address();
+            a3.setStreet("Björkgatan 5");
+            a3.setCity("Malmö");
+            a3.setCustomer(user2);
+
+            Address a4 = new Address();
+            a4.setStreet("Solvägen 8");
+            a4.setCity("Uppsala");
+            a4.setCustomer(user3);
+
+            Address a5 = new Address();
+            a5.setStreet("Havsgatan 3");
+            a5.setCity("Helsingborg");
+            a5.setCustomer(user4);
+            addressRepo.saveAll(List.of(a1, a2, a3, a4, a5));
 
             //mc
             Motorcycle mc1 = new Motorcycle();
@@ -125,12 +140,14 @@ public class DataLoader {
             b1.setCustomerId(user1.getId());
             b1.setStartDate(LocalDate.now());
             b1.setEndDate(LocalDate.now().plusDays(3));
+            b1.setStatus(Booking.BookingStatus.valueOf("ACTIVE"));
 
             Booking b2 = new Booking();
             b2.setMotorcycleId(mc2.getId());
             b2.setCustomerId(user2.getId());
             b2.setStartDate(LocalDate.now().plusDays(1));
             b2.setEndDate(LocalDate.now().plusDays(4));
+            b2.setStatus(Booking.BookingStatus.valueOf("ACTIVE"));
 
             bookingRepo.saveAll(List.of(b1, b2));
 

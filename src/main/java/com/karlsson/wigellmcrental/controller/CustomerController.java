@@ -26,21 +26,19 @@ public class CustomerController {
     // get all
     @GetMapping
     public List<CustomerDTO> getAll() {
-        logger.info("Admin fetching all customers");
         return service.getAll();
     }
 
     // get one by id
     @GetMapping("/{id}")
     public CustomerDTO getOne(@PathVariable Long id) {
-        logger.info("Admin fetching customer with id={}", id);
         return service.getById(id);
     }
 
     // post create
     @PostMapping
     public Customer create(@Valid @RequestBody Customer customer) {
-        logger.info("Admin creating customer: {}", customer.getUsername());
+        logger.info("Admin creating customer: {} {}", customer.getId(), customer.getUsername());
         return service.save(customer);
     }
 

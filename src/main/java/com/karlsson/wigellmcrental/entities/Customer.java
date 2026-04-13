@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "MC_Customer")
 public class Customer {
@@ -27,25 +30,30 @@ public class Customer {
     private String password;
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits")
     private String phoneNumber;
-    @NotBlank(message = "Address is required")
-    private String address;
-    @NotBlank(message = "City is required")
-    private String city;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
     @NotBlank(message = "Role is required")
     private String role;
 
     public Customer() {}
 
-    public Customer(String username, String firstName, String lastName, String email, String password, String phoneNumber, String address, String city, String role) {
+    public Customer(String username, String firstName, String lastName, String email, String password, String phoneNumber, String role,  List<Address> addresses) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.city = city;
         this.role = role;
+        this.addresses = new ArrayList<>();
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public long getId() {
@@ -96,21 +104,6 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public String getRole() {
         return role;

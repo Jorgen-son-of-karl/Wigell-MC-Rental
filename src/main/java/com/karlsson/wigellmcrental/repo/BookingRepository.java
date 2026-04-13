@@ -1,6 +1,7 @@
 package com.karlsson.wigellmcrental.repo;
 
 import com.karlsson.wigellmcrental.entities.Booking;
+import com.karlsson.wigellmcrental.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
