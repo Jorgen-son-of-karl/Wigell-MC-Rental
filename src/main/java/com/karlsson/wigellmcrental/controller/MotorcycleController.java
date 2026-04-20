@@ -12,7 +12,7 @@ import java.util.List;
 import org.slf4j.Logger;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("motorcycles/api/v1")
 public class MotorcycleController {
     private static final Logger logger =
             LoggerFactory.getLogger(MotorcycleController.class);
@@ -30,7 +30,7 @@ public class MotorcycleController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/motorcycles/{id}")
     public MotorcycleDTO getById(@PathVariable Long id) {
         return service.getById(id);
     }

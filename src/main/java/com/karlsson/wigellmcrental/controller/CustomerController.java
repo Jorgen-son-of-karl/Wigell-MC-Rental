@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping("motorcycles/api/v1/customers")
 public class CustomerController {
 
     private static final Logger logger =
