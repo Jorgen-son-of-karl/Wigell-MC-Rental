@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("motorcycles/api/v1/bookings")
+@RequestMapping("/motorcycles/api/v1/bookings")
 public class BookingController {
 
     private static final Logger logger =
@@ -49,46 +49,71 @@ public class BookingController {
     //==========================ADMIN=====================================
 
     // GET all bookings
-    @GetMapping()
-    public List<BookingDTO> getBookings(
+    @GetMapping
+    public ResponseEntity<List<BookingDTO>> getBookings(
             @RequestParam(required = false) Long customerId,
             Authentication authentication) {
 
-        return bookingService.getAll(customerId, authentication);
+        List<BookingDTO> bookings = bookingService.getAll(customerId, authentication);
+
+        return ResponseEntity.ok(bookings);
     }
 
     @GetMapping("/{id}")
-    public BookingDTO getBookingById(
+    public ResponseEntity<BookingDTO> getBookingById(
             @PathVariable Long id,
             Authentication authentication) {
 
-        return bookingService.getById(id, authentication);
+        BookingDTO booking = bookingService.getById(id, authentication);
+
+        if (booking == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(booking);
     }
 
     // PUT update
     @PutMapping("/{id}")
-    public BookingDTO update(@PathVariable Long id,
-                             @RequestBody BookingDTO dto) {
+    public ResponseEntity<BookingDTO> update(
+            @PathVariable Long id,
+            @RequestBody BookingDTO dto) {
 
         logger.info("Admin updating booking id={}", id);
-        return bookingService.update(id, dto);
+
+        BookingDTO updated = bookingService.update(id, dto);
+
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updated);
     }
 
     // DELETE
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        logger.warn("Admin deleted booking id={}", id);
-        bookingService.delete(id);
-    }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
 
+        logger.warn("Admin deleted booking id={}", id);
+
+        bookingService.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
 
     @PatchMapping("/{id}")
-    public BookingDTO updateStatus(
+    public ResponseEntity<BookingDTO> updateStatus(
             @PathVariable Long id,
             @RequestBody Map<String, String> body) {
+
         logger.info("Admin updated status of booking id={}", id);
 
-        return bookingService.updateStatus(id, body.get("status"));
-    }
+        BookingDTO updated = bookingService.updateStatus(id, body.get("status"));
 
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updated);
+    }
 }

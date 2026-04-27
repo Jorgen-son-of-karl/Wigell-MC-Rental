@@ -6,12 +6,14 @@ import com.karlsson.wigellmcrental.service.CustomerService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("motorcycles/api/v1/customers")
+@RequestMapping("/motorcycles/api/v1/customers")
 public class CustomerController {
 
     private static final Logger logger =
@@ -23,37 +25,66 @@ public class CustomerController {
         this.service = service;
     }
 
-    // get all
+    // GET all
     @GetMapping
-    public List<CustomerDTO> getAll() {
-        return service.getAll();
+    public ResponseEntity<List<CustomerDTO>> getAll() {
+        List<CustomerDTO> customers = service.getAll();
+        return ResponseEntity.ok(customers);
     }
 
-    // get one by id
+    // GET one by id
     @GetMapping("/{id}")
-    public CustomerDTO getOne(@PathVariable Long id) {
-        return service.getById(id);
+    public ResponseEntity<CustomerDTO> getOne(@PathVariable Long id) {
+        CustomerDTO customer = service.getById(id);
+
+        if (customer == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(customer);
     }
 
-    // post create
+    // POST create
     @PostMapping
-    public Customer create(@Valid @RequestBody Customer customer) {
+    public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer) {
+
+
+
+        System.out.println("Customer in: " + customer);
+        Customer created = service.save(customer);
+
+        URI location = URI.create("/motorcycles/api/v1/customers/" + created.getId());
         logger.info("Admin creating customer: {} {}", customer.getId(), customer.getUsername());
-        return service.save(customer);
+        return ResponseEntity
+                .created(location)
+                .body(created);
     }
 
-    // delete by id
+    // DELETE by id
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
         logger.warn("Admin deleted customer with id={}", id);
+
         service.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 
-    // put update by id
+    // PUT update by id
     @PutMapping("/{id}")
-    public CustomerDTO update(@PathVariable Long id, @RequestBody CustomerDTO dto) {
+    public ResponseEntity<CustomerDTO> update(
+            @PathVariable Long id,
+            @RequestBody CustomerDTO dto) {
 
         logger.info("Admin updating customer id={}", id);
-        return service.update(id, dto);
+
+        CustomerDTO updated = service.update(id, dto);
+
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updated);
     }
 }

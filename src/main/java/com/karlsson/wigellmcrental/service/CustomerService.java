@@ -32,6 +32,15 @@ public class CustomerService {
     }
 
     public Customer save(Customer customer) {
+
+        if (customer.getPassword() != null) {
+            customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+        }
+
+        if (customer.getAddresses() != null) {
+            customer.getAddresses().forEach(address -> address.setCustomer(customer));
+        }
+
         return repository.save(customer);
     }
 
