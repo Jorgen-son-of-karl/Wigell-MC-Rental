@@ -8,6 +8,7 @@ import com.karlsson.wigellmcrental.repo.AddressRepository;
 import com.karlsson.wigellmcrental.repo.BookingRepository;
 import com.karlsson.wigellmcrental.repo.CustomerRepository;
 import com.karlsson.wigellmcrental.repo.MotorcycleRepository;
+import com.karlsson.wigellmcrental.service.CurrencyService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -141,6 +142,8 @@ public class DataLoader {
             b1.setStartDate(LocalDate.now());
             b1.setEndDate(LocalDate.now().plusDays(3));
             b1.setStatus(Booking.BookingStatus.valueOf("ACTIVE"));
+            b1.setBookingPriceSek(mc1.getPricePerDaySek() + 3);
+            b1.setBookingPriceGbp(CurrencyService.sekToGBP(mc1.getPricePerDaySek() + 3));
 
             Booking b2 = new Booking();
             b2.setMotorcycleId(mc2.getId());
@@ -148,6 +151,8 @@ public class DataLoader {
             b2.setStartDate(LocalDate.now().plusDays(1));
             b2.setEndDate(LocalDate.now().plusDays(4));
             b2.setStatus(Booking.BookingStatus.valueOf("ACTIVE"));
+            b2.setBookingPriceSek(mc2.getPricePerDaySek() + 3);
+            b2.setBookingPriceGbp(CurrencyService.sekToGBP(mc2.getPricePerDaySek() + 3));
 
             bookingRepo.saveAll(List.of(b1, b2));
 
