@@ -106,31 +106,31 @@ public class DataLoader {
             mc1.setBrand("Yamaha");
             mc1.setModel("R1");
             mc1.setMakeYear("2022");
-            mc1.setPricePerDay(999);
+            mc1.setPricePerDaySek(999);
 
             Motorcycle mc2 = new Motorcycle();
             mc2.setBrand("Honda");
             mc2.setModel("CBR600RR");
             mc2.setMakeYear("2021");
-            mc2.setPricePerDay(850);
+            mc2.setPricePerDaySek(850);
 
             Motorcycle mc3 = new Motorcycle();
             mc3.setBrand("Kawasaki");
             mc3.setModel("Ninja ZX-10R");
             mc3.setMakeYear("2023");
-            mc3.setPricePerDay(1100);
+            mc3.setPricePerDaySek(1100);
 
             Motorcycle mc4 = new Motorcycle();
             mc4.setBrand("Suzuki");
             mc4.setModel("GSX-R750");
             mc4.setMakeYear("2020");
-            mc4.setPricePerDay(780);
+            mc4.setPricePerDaySek(780);
 
             Motorcycle mc5 = new Motorcycle();
             mc5.setBrand("Ducati");
             mc5.setModel("Panigale V4");
             mc5.setMakeYear("2023");
-            mc5.setPricePerDay(1500);
+            mc5.setPricePerDaySek(1500);
 
             motorcycleRepo.saveAll(List.of(mc1, mc2, mc3, mc4, mc5));
 

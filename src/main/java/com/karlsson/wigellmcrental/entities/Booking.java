@@ -1,5 +1,6 @@
 package com.karlsson.wigellmcrental.entities;
 
+import com.karlsson.wigellmcrental.service.CurrencyService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,20 +18,39 @@ public class Booking {
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
    private BookingStatus status;
-
+    private double bookingPriceSek;
+    private double bookingPriceGbp;
     public Booking() {}
 
-    public Booking(long customerId, long motorcycleId, LocalDate startDate, LocalDate endDate) {
+    public Booking(long customerId, long motorcycleId, LocalDate startDate, LocalDate endDate, double bookingPriceSek, double bookingPriceGbp) {
         this.customerId = customerId;
         this.motorcycleId = motorcycleId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = BookingStatus.ACTIVE;
+        this.bookingPriceSek = bookingPriceSek;
+        this.bookingPriceGbp = bookingPriceGbp;
     }
     public enum BookingStatus {
         ACTIVE,
         RETURNED,
         LATE
+    }
+
+    public double getBookingPriceSek() {
+        return bookingPriceSek;
+    }
+
+    public void setBookingPriceSek(double bookingPriceSek) {
+        this.bookingPriceSek = bookingPriceSek;
+    }
+
+    public double getBookingPriceGbp() {
+        return bookingPriceGbp;
+    }
+
+    public void setBookingPriceGbp(double bookingPriceGbp) {
+        this.bookingPriceGbp = bookingPriceGbp;
     }
 
     public long getId() {
@@ -79,4 +99,6 @@ public class Booking {
     public void setStatus(BookingStatus status) {
         this.status = status;
     }
+
+
 }

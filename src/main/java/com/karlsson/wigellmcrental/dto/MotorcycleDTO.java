@@ -6,5 +6,6 @@ public class MotorcycleDTO {
     public String brand;
     public String model;
     public String makeYear;
-    public double pricePerDay;
+    public double pricePerDaySek;
+    public double pricePerDayGbp;
 }

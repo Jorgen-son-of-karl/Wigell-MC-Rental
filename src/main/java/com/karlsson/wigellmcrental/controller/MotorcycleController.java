@@ -58,7 +58,7 @@ public class MotorcycleController {
     @PostMapping("/bikes")
     public ResponseEntity<MotorcycleDTO> create(@Valid @RequestBody MotorcycleDTO dto) {
 
-        logger.info("Admin created motorcycle: {} {} {} {}", dto.brand, dto.model, dto.makeYear, dto.pricePerDay);
+        logger.info("Admin created motorcycle: {} {} {} {}", dto.brand, dto.model, dto.makeYear, dto.pricePerDaySek);
 
         MotorcycleDTO created = service.create(dto);
 
@@ -83,7 +83,7 @@ public class MotorcycleController {
                 mc.brand,
                 mc.model,
                 mc.makeYear,
-                mc.pricePerDay
+                mc.pricePerDaySek
         );
 
         service.delete(id);

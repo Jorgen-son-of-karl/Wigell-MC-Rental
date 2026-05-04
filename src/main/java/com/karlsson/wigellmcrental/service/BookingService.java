@@ -4,13 +4,16 @@ import com.karlsson.wigellmcrental.dto.BookingDTO;
 import com.karlsson.wigellmcrental.dto.CustomerDTO;
 import com.karlsson.wigellmcrental.entities.Booking;
 import com.karlsson.wigellmcrental.entities.Customer;
+import com.karlsson.wigellmcrental.entities.Motorcycle;
 import com.karlsson.wigellmcrental.repo.BookingRepository;
 import com.karlsson.wigellmcrental.repo.CustomerRepository;
+import com.karlsson.wigellmcrental.repo.MotorcycleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -18,16 +21,44 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
+    private final MotorcycleRepository motorcycleRepository;
+    private final CurrencyService currencyService;
 
-    public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository) {
+    public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, MotorcycleRepository motorcycleRepository, CurrencyService currencyService) {
         this.bookingRepository = bookingRepository;
         this.customerRepository = customerRepository;
+        this.motorcycleRepository = motorcycleRepository;
+        this.currencyService = currencyService;
     }
 
     public BookingDTO create(BookingDTO dto) {
-        Booking booking = toEntity(dto);
-        return toDTO(bookingRepository.save(booking));
+        Motorcycle motorcycle = motorcycleRepository.findById(dto.motorcycleId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Motorcycle not found"));
+
+        if (dto.startDate == null || dto.endDate == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start and end date are required");
+        }
+        if (dto.endDate.isBefore(dto.startDate)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "End date must be after start date");
+        }
+
+        long numberOfDays = ChronoUnit.DAYS.between(dto.startDate, dto.endDate);
+
+        double totalSek = motorcycle.getPricePerDaySek() * numberOfDays;
+        double totalGbp = currencyService.sekToGBP(totalSek);
+
+        Booking booking = new Booking(
+                dto.customerId,
+                dto.motorcycleId,
+                dto.startDate,
+                dto.endDate,
+                totalSek,
+                totalGbp
+        );
+        Booking saved = bookingRepository.save(booking);
+        return toDTO(saved);
     }
+
 
     public List<BookingDTO> getByCustomer(Long customerId) {
         return bookingRepository.findByCustomerId(customerId)
@@ -44,6 +75,8 @@ public class BookingService {
         dto.startDate = b.getStartDate();
         dto.endDate = b.getEndDate();
         dto.status = b.getStatus();
+        dto.bookingPriceSek = b.getBookingPriceSek();
+        dto.bookingPriceGbp = b.getBookingPriceGbp();
         return dto;
     }
 
@@ -54,6 +87,8 @@ public class BookingService {
         b.setStartDate(dto.startDate);
         b.setEndDate(dto.endDate);
         b.setStatus(dto.status);
+        b.setBookingPriceSek(dto.bookingPriceSek);
+        b.setBookingPriceGbp(dto.bookingPriceGbp);
         return b;
     }
 
@@ -72,6 +107,9 @@ public class BookingService {
 
         if (dto.endDate != null) {
             booking.setEndDate(dto.endDate);
+        }
+        if (dto.status != null) {
+            booking.setStatus(dto.status);
         }
 
         return toDTO(bookingRepository.save(booking));

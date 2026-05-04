@@ -1,5 +1,6 @@
 package com.karlsson.wigellmcrental.entities;
 
+import com.karlsson.wigellmcrental.service.CurrencyService;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,15 +27,18 @@ public class Motorcycle {
     private String makeYear;
 
     @Positive(message = "Price must be positive")
-    private double pricePerDay;
+    private double pricePerDaySek;
+
+    private double pricePerDayGbp;
 
     public Motorcycle() {}
 
-    public Motorcycle(String brand, String model, String makeYear, double pricePerDay) {
+    public Motorcycle(String brand, String model, String makeYear, double pricePerDaySek) {
         this.brand = brand;
         this.model = model;
         this.makeYear = makeYear;
-        this.pricePerDay = pricePerDay;
+        this.pricePerDaySek = pricePerDaySek;
+        this.pricePerDayGbp = CurrencyService.sekToGBP(pricePerDaySek);
     }
 
     public long getId() {
@@ -61,6 +65,13 @@ public class Motorcycle {
         this.model = model;
     }
 
+    public double getPricePerDayGbp() {
+        return pricePerDayGbp;
+    }
+
+    public void setPricePerDayGbp(double pricePerDayGbp) {
+        this.pricePerDayGbp = pricePerDayGbp;
+    }
 
     public String getMakeYear() {
         return makeYear;
@@ -70,12 +81,12 @@ public class Motorcycle {
         this.makeYear = makeYear;
     }
 
-    public double getPricePerDay() {
-        return pricePerDay;
+    public double getPricePerDaySek() {
+        return pricePerDaySek;
     }
 
-    public void setPricePerDay(double pricePerDay) {
-        this.pricePerDay = pricePerDay;
+    public void setPricePerDaySek(double pricePerDay) {
+        this.pricePerDaySek = pricePerDay;
     }
 
     @Override
@@ -85,7 +96,7 @@ public class Motorcycle {
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
                 ", makeYear='" + makeYear + '\'' +
-                ", pricePerDay=" + pricePerDay +
+                ", pricePerDay=" + pricePerDaySek +
                 '}';
     }
 }

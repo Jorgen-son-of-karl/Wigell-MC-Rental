@@ -2,7 +2,6 @@ package com.karlsson.wigellmcrental.service;
 
 import com.karlsson.wigellmcrental.dto.MotorcycleDTO;
 import com.karlsson.wigellmcrental.entities.Booking;
-import com.karlsson.wigellmcrental.entities.Customer;
 import com.karlsson.wigellmcrental.entities.Motorcycle;
 import com.karlsson.wigellmcrental.repo.BookingRepository;
 import com.karlsson.wigellmcrental.repo.MotorcycleRepository;
@@ -50,7 +49,8 @@ public class MotorcycleService {
         dto.brand = mc.getBrand();
         dto.model = mc.getModel();
         dto.makeYear = mc.getMakeYear();
-        dto.pricePerDay = mc.getPricePerDay();
+        dto.pricePerDaySek = mc.getPricePerDaySek();
+        dto.pricePerDayGbp = mc.getPricePerDayGbp();
         return dto;
     }
 
@@ -59,7 +59,8 @@ public class MotorcycleService {
         mc.setBrand(dto.brand);
         mc.setModel(dto.model);
         mc.setMakeYear(dto.makeYear);
-        mc.setPricePerDay(dto.pricePerDay);
+        mc.setPricePerDaySek(dto.pricePerDaySek);
+        mc.setPricePerDayGbp(dto.pricePerDayGbp);
         return mc;
     }
 
@@ -95,8 +96,8 @@ public class MotorcycleService {
         if (dto.makeYear != null) {
             mc.setMakeYear(dto.makeYear);
         }
-        if (dto.pricePerDay > 0) {
-            mc.setPricePerDay(dto.pricePerDay);
+        if (dto.pricePerDaySek > 0) {
+            mc.setPricePerDaySek(dto.pricePerDaySek);
         }
         return toDTO(motorcycleRepository.save(mc));
     }

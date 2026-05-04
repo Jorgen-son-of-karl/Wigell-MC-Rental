@@ -12,4 +12,6 @@ public class BookingDTO {
     public LocalDate startDate;
     public LocalDate endDate;
     public Booking.BookingStatus status;
+    public double bookingPriceSek;
+    public double bookingPriceGbp;
 }
